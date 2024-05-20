@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { searchMovies } from '../Api/Api';
 
 const Movies = () => {
@@ -7,7 +8,11 @@ const Movies = () => {
 
   const handleSearch = e => {
     e.preventDefault();
-    searchMovies(query).then(response => setMovies(response.data.results));
+    if (query.trim() !== '') {
+      searchMovies(query)
+        .then(response => setMovies(response.data.results))
+        .catch(error => console.error("Error searching movies:", error));
+    }
   };
 
   return (
@@ -24,7 +29,9 @@ const Movies = () => {
       </form>
       <ul>
         {movies.map(movie => (
-          <li key={movie.id}>{movie.title}</li>
+          <li key={movie.id}>
+            <Link to={`/movies/${movie.id}`}>{movie.title}</Link>
+          </li>
         ))}
       </ul>
     </div>
